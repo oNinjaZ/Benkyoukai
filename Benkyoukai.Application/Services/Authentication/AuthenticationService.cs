@@ -4,7 +4,6 @@ namespace Benkyoukai.Application.Services.Authentication;
 
 public class AuthenticationService : IAuthenticationService
 {
-
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
 
     public AuthenticationService(IJwtTokenGenerator jwtTokenGenerator)
