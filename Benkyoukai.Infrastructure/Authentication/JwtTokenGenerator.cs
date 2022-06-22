@@ -2,12 +2,20 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Benkyoukai.Application.Common.Interfaces.Authentication;
+using Benkyoukai.Application.Common.Interfaces.Services;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Benkyoukai.Infrastructure.Authentication;
 
 public class JwtTokenGenerator : IJwtTokenGenerator
 {
+    private readonly IDateTimeProvider _dateTimeProvider;
+
+    public JwtTokenGenerator(IDateTimeProvider dateTimeProvider)
+    {
+        _dateTimeProvider = dateTimeProvider;
+    }
+
     public string GenerateToken(Guid userId, string firstName, string lastName)
     {
         var claims = new []
@@ -19,11 +27,11 @@ public class JwtTokenGenerator : IJwtTokenGenerator
         };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("super-secret-key"));
-        var signingCreds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+        var signingCreds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);
 
         var token = new JwtSecurityToken(
             issuer: "Benkyoukai",
-            expires: DateTime.Now.AddMinutes(30),
+            expires: _dateTimeProvider.UtcNow.AddMinutes(60),
             claims: claims,
             signingCredentials: signingCreds);
 
