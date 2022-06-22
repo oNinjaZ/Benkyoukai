@@ -2,8 +2,9 @@ namespace Benkyoukai.Infrastructure.Authentication;
 
 public class JwtSettings
 {
-    public string? Issuer { get; set; }
-    public string? Audience { get; set; }
-    public string? Key { get; set; }
-    public int ExpiryMinutes { get; set; }
+    public const string SectionName = "JwtSettings";
+    public string Secret { get; init; } = default!;
+    public int ExpiryMinutes { get; init; }
+    public string Issuer { get; init; } = default!;
+    public string Audience { get; init; } = default!;
 }
