@@ -1,4 +1,4 @@
 {
-    "discord.detailsEditing": "Editing {file_name}",
+    "discord.detailsEditing": "{file_name}の編集なう",
     "discord.removeDetails": false
 }

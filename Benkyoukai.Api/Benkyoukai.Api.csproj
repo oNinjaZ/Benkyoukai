@@ -13,4 +13,8 @@
     <ProjectReference Include="..\Benkyoukai.Infrastructure\Benkyoukai.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
+
 </Project>
