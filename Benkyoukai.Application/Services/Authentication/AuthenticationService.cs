@@ -1,6 +1,8 @@
 using Benkyoukai.Application.Common.Interfaces.Authentication;
 using Benkyoukai.Application.Common.Interfaces.Persistence;
+using Benkyoukai.Domain.Common.Errors;
 using Benkyoukai.Domain.Entities;
+using ErrorOr;
 
 namespace Benkyoukai.Application.Services.Authentication;
 
@@ -15,12 +17,12 @@ public class AuthenticationService : IAuthenticationService
         _userRepository = userRepository;
     }
 
-    public AuthenticationResult Register(string firstName, string lastName, string email, string password)
+    public ErrorOr<AuthenticationResult> Register(string firstName, string lastName, string email, string password)
     {
         // validate that the user doesn't exist
         if (_userRepository.GetUserByEmail(email) is not null)
         {
-            throw new Exception("User with given email already exists");
+            return Errors.User.DuplicateEmail;
         }
 
         // create user (generate unique ID) & persist to db
@@ -42,15 +44,14 @@ public class AuthenticationService : IAuthenticationService
             token);
     }
 
-    public AuthenticationResult Login(string email, string password)
+    public ErrorOr<AuthenticationResult> Login(string email, string password)
     {
         // validate that the user exists
         if (_userRepository.GetUserByEmail(email) is not User user)
-            throw new Exception("User with given email does not exist");
-
+            return Errors.Authentication.InvalidCredentials;
         // validate that the password is correct
         if (user.Password != password)
-            throw new Exception("Invalid password");
+            return Errors.Authentication.InvalidCredentials;
 
         // create JWT token
         var token = _jwtTokenGenerator.GenerateToken(user);

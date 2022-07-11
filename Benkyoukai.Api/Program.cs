@@ -1,7 +1,7 @@
-using Benkyoukai.Api.Filters;
-using Benkyoukai.Api.Middleware;
+using Benkyoukai.Api.Common.Errors;
 using Benkyoukai.Application;
 using Benkyoukai.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 {
@@ -9,14 +9,14 @@ var builder = WebApplication.CreateBuilder(args);
         .AddApplication()
         .AddInfrastructure(builder.Configuration);
 
-    // builder.Services.AddControllers(opts => opts.Filters.Add<ErrorHandlingFilterAttribute>());
     builder.Services.AddControllers();
+
+    builder.Services.AddSingleton<ProblemDetailsFactory, BenkyoukaiProblemDetailsFactory>();
 }
 
 var app = builder.Build();
 {
     app.UseExceptionHandler("/error");
-    //app.UseMiddleware<ErrorHandlingMiddleware>();
     app.UseHttpsRedirection();
     app.MapControllers();
     app.Run();
